@@ -1,0 +1,18 @@
+{
+  "metadata": {
+    "created_at": "2026-07-05T09:41:43.460512",
+    "total_photos": 2,
+    "phase": "0_initial_scan"
+  },
+  "garments": [],
+  "source_photos": [
+    {
+      "drive_id": "1padDeXlJeiueAO1ZLaFCn5iNQ_4RD0XA",
+      "drive_url": "https://drive.google.com/uc?id=1padDeXlJeiueAO1ZLaFCn5iNQ_4RD0XA&export=download"
+    },
+    {
+      "drive_id": "1anQpPXPNgrn2ENm699AULWnz9sttWXsB",
+      "drive_url": "https://drive.google.com/uc?id=1anQpPXPNgrn2ENm699AULWnz9sttWXsB&export=download"
+    }
+  ]
+}
