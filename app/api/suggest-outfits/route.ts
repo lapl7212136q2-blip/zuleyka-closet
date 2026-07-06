@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { promises as fs } from 'fs';
+import path from 'path';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY;
@@ -7,6 +9,17 @@ const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY;
 let supabase: any = null;
 if (supabaseUrl && supabaseServiceKey) {
   supabase = createClient(supabaseUrl, supabaseServiceKey);
+}
+
+async function getGarmentsFromFile(filename: string = 'garments-catalog.json') {
+  try {
+    const catalogPath = path.join(process.cwd(), 'data', filename);
+    const data = await fs.readFile(catalogPath, 'utf-8');
+    return JSON.parse(data);
+  } catch (err) {
+    console.warn(`Could not load ${filename}:`, err);
+    return [];
+  }
 }
 
 // Color compatibility matrix (simple heuristic)
@@ -109,26 +122,52 @@ function generateOutfitSuggestions(garments: Garment[], count: number = 3): Arra
 
 export async function GET(request: NextRequest) {
   try {
-    if (!supabase) {
-      return NextResponse.json({ error: 'Supabase not configured' }, { status: 500 });
-    }
-
     const count = parseInt(request.nextUrl.searchParams.get('count') || '3');
-    const category = request.nextUrl.searchParams.get('category');
+    const categoryFilter = request.nextUrl.searchParams.get('category');
 
-    // Fetch garments
-    let query = supabase
-      .from('garments')
-      .select('id, category, primary_color, color, style, season')
-      .eq('analysis_status', 'completed');
+    let garments: any[] = [];
 
-    if (category) {
-      query = query.ilike('category', `%${category}%`);
+    // Try Supabase first
+    if (supabase) {
+      try {
+        let query = supabase
+          .from('garments')
+          .select('id, category, primary_color, color, style, season')
+          .eq('analysis_status', 'completed');
+
+        if (categoryFilter) {
+          query = query.ilike('category', `%${categoryFilter}%`);
+        }
+
+        const { data, error } = await query;
+        if (!error && data && data.length > 0) {
+          garments = data;
+        }
+      } catch (err) {
+        console.warn('Supabase unavailable, falling back to local catalog:', err);
+      }
     }
 
-    const { data: garments, error } = await query;
+    // Fallback: load from local catalog
+    if (garments.length === 0) {
+      const allGarments = await getGarmentsFromFile('garments-catalog.json');
+      garments = allGarments.map((g: any) => ({
+        id: g.id,
+        category: g.category,
+        primary_color: g.primary_color,
+        color: g.color,
+        style: g.style,
+        season: g.season,
+      }));
 
-    if (error || !garments || garments.length < 2) {
+      if (categoryFilter) {
+        garments = garments.filter((g: any) =>
+          g.category?.toLowerCase().includes(categoryFilter.toLowerCase())
+        );
+      }
+    }
+
+    if (!garments || garments.length < 2) {
       return NextResponse.json({
         suggestions: [],
         message: 'Not enough garments to generate suggestions'

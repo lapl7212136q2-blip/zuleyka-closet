@@ -11,20 +11,21 @@ if (supabaseUrl && supabaseAnonKey) {
   supabase = createClient(supabaseUrl, supabaseAnonKey);
 }
 
-async function getGarmentsFromFile() {
+async function getGarmentsFromFile(filename: string = 'garments-catalog.json') {
   try {
-    const garmentsPath = path.join(process.cwd(), 'data', 'garments.json');
-    const data = await fs.readFile(garmentsPath, 'utf-8');
+    const catalogPath = path.join(process.cwd(), 'data', filename);
+    const data = await fs.readFile(catalogPath, 'utf-8');
     return JSON.parse(data);
-  } catch {
+  } catch (err) {
+    console.warn(`Could not load ${filename}:`, err);
     return [];
   }
 }
 
 function filterGarments(garments: any[], type?: string | null, color?: string | null, style?: string | null, season?: string | null) {
   return garments.filter((g: any) => {
-    if (type && !g.category?.toLowerCase().includes(type)) return false;
-    if (color && !g.primary_color?.toLowerCase().includes(color)) return false;
+    if (type && !g.category?.toLowerCase().includes(type) && !g.name?.toLowerCase().includes(type)) return false;
+    if (color && !g.primary_color?.toLowerCase().includes(color) && !g.color?.toLowerCase().includes(color)) return false;
     if (style && !g.style?.toLowerCase().includes(style)) return false;
     if (season && !g.season?.toLowerCase().includes(season)) return false;
     return true;
@@ -39,42 +40,50 @@ export async function GET(request: NextRequest) {
     const style = searchParams.get('style')?.toLowerCase();
     const season = searchParams.get('season')?.toLowerCase();
 
-    if (!supabase) {
-      return NextResponse.json(
-        { error: 'Supabase not configured', garments: [] },
-        { status: 500 }
-      );
+    let garments: any[] = [];
+
+    // Try Supabase first
+    if (supabase) {
+      try {
+        let query = supabase
+          .from('garments')
+          .select('*')
+          .eq('analysis_status', 'completed');
+
+        if (type) {
+          query = query.ilike('category', `%${type}%`);
+        }
+        if (color) {
+          query = query.ilike('primary_color', `%${color}%`);
+        }
+        if (style) {
+          query = query.ilike('style', `%${style}%`);
+        }
+        if (season) {
+          query = query.ilike('season', `%${season}%`);
+        }
+
+        const { data, error } = await query;
+        if (!error && data && data.length > 0) {
+          garments = data;
+        }
+      } catch (err) {
+        console.warn('Supabase unavailable, falling back to local catalog:', err);
+      }
     }
 
-    let query = supabase
-      .from('garments')
-      .select('*')
-      .eq('analysis_status', 'completed');
-
-    if (type) {
-      query = query.ilike('category', `%${type}%`);
-    }
-    if (color) {
-      query = query.ilike('primary_color', `%${color}%`);
-    }
-    if (style) {
-      query = query.ilike('style', `%${style}%`);
-    }
-    if (season) {
-      query = query.ilike('season', `%${season}%`);
+    // Fallback: load from local catalog
+    if (garments.length === 0) {
+      garments = await getGarmentsFromFile('garments-catalog.json');
     }
 
-    const { data, error } = await query;
-
-    if (error) {
-      console.error('Supabase error:', error);
-      return NextResponse.json(
-        { error: error.message, garments: [] },
-        { status: 500 }
-      );
+    // Apply filters
+    let filteredGarments = garments;
+    if (type || color || style || season) {
+      filteredGarments = filterGarments(garments, type, color, style, season);
     }
 
-    return NextResponse.json({ garments: data || [], total: data?.length || 0 });
+    return NextResponse.json({ garments: filteredGarments, total: filteredGarments.length });
   } catch (error: any) {
     console.error('API error:', error);
     return NextResponse.json(
