@@ -1,10 +1,30 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
+import { Fraunces, Karla } from 'next/font/google';
 import { AuthProvider } from '@/lib/auth-context';
+import AppShell from '@/components/AppShell';
 import './globals.css';
 
+const fraunces = Fraunces({
+  subsets: ['latin'],
+  variable: '--font-fraunces',
+  style: ['normal', 'italic'],
+  axes: ['opsz'],
+});
+
+const karla = Karla({
+  subsets: ['latin'],
+  variable: '--font-karla',
+});
+
 export const metadata: Metadata = {
-  title: 'Clóset de Zuleyka',
-  description: 'Tu asistente de moda IA',
+  title: 'Zuleyka — Clóset personal',
+  description: 'Tu armario digital: prendas, looks y sugerencias según el clima',
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  themeColor: '#f6f1e8',
 };
 
 export default function RootLayout({
@@ -13,12 +33,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="es">
+    <html lang="es" className={`${fraunces.variable} ${karla.variable}`}>
       <body>
         <AuthProvider>
-          <div className="min-h-screen bg-gradient-to-br from-pink-50 to-purple-50">
-            {children}
-          </div>
+          <AppShell>{children}</AppShell>
         </AuthProvider>
       </body>
     </html>

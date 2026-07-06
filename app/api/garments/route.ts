@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import { promises as fs } from 'fs';
-import path from 'path';
+import catalog from '@/data/garments-catalog.json';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -9,17 +8,6 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 let supabase: any = null;
 if (supabaseUrl && supabaseAnonKey) {
   supabase = createClient(supabaseUrl, supabaseAnonKey);
-}
-
-async function getGarmentsFromFile(filename: string = 'garments-catalog.json') {
-  try {
-    const catalogPath = path.join(process.cwd(), 'data', filename);
-    const data = await fs.readFile(catalogPath, 'utf-8');
-    return JSON.parse(data);
-  } catch (err) {
-    console.warn(`Could not load ${filename}:`, err);
-    return [];
-  }
 }
 
 function filterGarments(garments: any[], type?: string | null, color?: string | null, style?: string | null, season?: string | null) {
@@ -40,41 +28,27 @@ export async function GET(request: NextRequest) {
     const style = searchParams.get('style')?.toLowerCase();
     const season = searchParams.get('season')?.toLowerCase();
 
-    let garments: any[] = [];
+    // Local catalog is the source of truth; Supabase adds user uploads
+    let garments: any[] = [...(catalog as any[])];
 
-    // Try Supabase first
     if (supabase) {
       try {
-        let query = supabase
+        const { data, error } = await supabase
           .from('garments')
           .select('*')
           .eq('analysis_status', 'completed');
 
-        if (type) {
-          query = query.ilike('category', `%${type}%`);
-        }
-        if (color) {
-          query = query.ilike('primary_color', `%${color}%`);
-        }
-        if (style) {
-          query = query.ilike('style', `%${style}%`);
-        }
-        if (season) {
-          query = query.ilike('season', `%${season}%`);
-        }
-
-        const { data, error } = await query;
-        if (!error && data && data.length > 0) {
-          garments = data;
+        if (!error && data) {
+          const known = new Set(
+            garments.flatMap((g: any) => [g.image_path, g.id].filter(Boolean))
+          );
+          for (const g of data) {
+            if (!known.has(g.image_path) && !known.has(g.id)) garments.push(g);
+          }
         }
       } catch (err) {
-        console.warn('Supabase unavailable, falling back to local catalog:', err);
+        console.warn('Supabase unavailable, using local catalog only:', err);
       }
-    }
-
-    // Fallback: load from local catalog
-    if (garments.length === 0) {
-      garments = await getGarmentsFromFile('garments-catalog.json');
     }
 
     // Apply filters

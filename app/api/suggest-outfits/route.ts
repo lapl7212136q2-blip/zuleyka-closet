@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import { promises as fs } from 'fs';
-import path from 'path';
+import catalog from '@/data/garments-catalog.json';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY;
@@ -9,17 +8,6 @@ const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY;
 let supabase: any = null;
 if (supabaseUrl && supabaseServiceKey) {
   supabase = createClient(supabaseUrl, supabaseServiceKey);
-}
-
-async function getGarmentsFromFile(filename: string = 'garments-catalog.json') {
-  try {
-    const catalogPath = path.join(process.cwd(), 'data', filename);
-    const data = await fs.readFile(catalogPath, 'utf-8');
-    return JSON.parse(data);
-  } catch (err) {
-    console.warn(`Could not load ${filename}:`, err);
-    return [];
-  }
 }
 
 // Color compatibility matrix (simple heuristic)
@@ -78,46 +66,54 @@ function getOutfitScore(garments: Garment[]): number {
   return score;
 }
 
+// Composición real de outfits: vestido/conjunto (+abrigo) o top+bajo (+abrigo)
 function generateOutfitSuggestions(garments: Garment[], count: number = 3): Array<{ id: string; name: string; garment_ids: string[]; score: number }> {
-  const suggestions: Array<{ id: string; name: string; garment_ids: string[]; score: number }> = [];
+  const byCat = (c: string) => garments.filter(g => g.category === c);
+  const colorOf = (g: Garment) => (g.primary_color || g.color || 'unknown').toLowerCase();
+  const compatible = (a: Garment, b: Garment) => {
+    const ca = colorOf(a), cb = colorOf(b);
+    if (ca === 'unknown' || cb === 'unknown') return true;
+    if (ca === 'multicolor' || cb === 'multicolor') return true;
+    if (ca === cb) return true;
+    return getCompatibleColors(ca).includes(cb) || getCompatibleColors(cb).includes(ca);
+  };
 
-  // Generate combinations
-  for (let i = 0; i < garments.length && suggestions.length < count; i++) {
-    const base = garments[i];
-    const compatible: Garment[] = [base];
-
-    // Find compatible pieces
-    for (let j = 0; j < garments.length && compatible.length < 3; j++) {
-      if (i === j) continue;
-      const piece = garments[j];
-
-      // Must be different category
-      if (piece.category === base.category) continue;
-
-      // Color check
-      const baseColor = (base.primary_color || base.color || 'unknown').toLowerCase();
-      const pieceColor = (piece.primary_color || piece.color || 'unknown').toLowerCase();
-
-      if (pieceColor === 'unknown' || getCompatibleColors(baseColor).includes(pieceColor)) {
-        compatible.push(piece);
-      }
+  const candidates: Garment[][] = [];
+  for (const base of [...byCat('dress'), ...byCat('outfit')]) {
+    candidates.push([base]);
+    for (const outer of byCat('outerwear')) {
+      if (compatible(base, outer)) candidates.push([base, outer]);
     }
-
-    if (compatible.length >= 2) {
-      const score = getOutfitScore(compatible);
-      const garmentsStr = compatible.map(g => g.category).join(' + ');
-
-      suggestions.push({
-        id: `outfit-${i}-${Date.now()}`,
-        name: `${garmentsStr}`,
-        garment_ids: compatible.map(g => g.id),
-        score,
-      });
+  }
+  for (const top of byCat('top')) {
+    for (const bottom of byCat('bottom')) {
+      if (!compatible(top, bottom)) continue;
+      candidates.push([top, bottom]);
+      for (const outer of byCat('outerwear')) {
+        if (compatible(top, outer)) candidates.push([top, bottom, outer]);
+      }
     }
   }
 
-  // Sort by score and return top suggestions
-  return suggestions.sort((a, b) => b.score - a.score).slice(0, count);
+  const scored = candidates.map((pieces, i) => ({
+    id: `outfit-${i}-${Date.now()}`,
+    name: pieces.map(g => g.category).join(' + '),
+    garment_ids: pieces.map(g => g.id),
+    score: getOutfitScore(pieces) + pieces.length * 5,
+  }));
+
+  // baraja y evita repetir la misma prenda base entre propuestas
+  scored.sort(() => Math.random() - 0.5);
+  scored.sort((a, b) => b.score - a.score);
+  const seen = new Set<string>();
+  const out: typeof scored = [];
+  for (const s of scored) {
+    if (seen.has(s.garment_ids[0]) && out.length < candidates.length) continue;
+    seen.add(s.garment_ids[0]);
+    out.push(s);
+    if (out.length >= count) break;
+  }
+  return out;
 }
 
 export async function GET(request: NextRequest) {
@@ -125,46 +121,20 @@ export async function GET(request: NextRequest) {
     const count = parseInt(request.nextUrl.searchParams.get('count') || '3');
     const categoryFilter = request.nextUrl.searchParams.get('category');
 
-    let garments: any[] = [];
+    // El catálogo local es la fuente de verdad
+    let garments: any[] = (catalog as any[]).map((g: any) => ({
+      id: g.id,
+      category: g.category,
+      primary_color: g.primary_color,
+      color: g.color,
+      style: g.style,
+      season: g.season,
+    }));
 
-    // Try Supabase first
-    if (supabase) {
-      try {
-        let query = supabase
-          .from('garments')
-          .select('id, category, primary_color, color, style, season')
-          .eq('analysis_status', 'completed');
-
-        if (categoryFilter) {
-          query = query.ilike('category', `%${categoryFilter}%`);
-        }
-
-        const { data, error } = await query;
-        if (!error && data && data.length > 0) {
-          garments = data;
-        }
-      } catch (err) {
-        console.warn('Supabase unavailable, falling back to local catalog:', err);
-      }
-    }
-
-    // Fallback: load from local catalog
-    if (garments.length === 0) {
-      const allGarments = await getGarmentsFromFile('garments-catalog.json');
-      garments = allGarments.map((g: any) => ({
-        id: g.id,
-        category: g.category,
-        primary_color: g.primary_color,
-        color: g.color,
-        style: g.style,
-        season: g.season,
-      }));
-
-      if (categoryFilter) {
-        garments = garments.filter((g: any) =>
-          g.category?.toLowerCase().includes(categoryFilter.toLowerCase())
-        );
-      }
+    if (categoryFilter) {
+      garments = garments.filter((g: any) =>
+        g.category?.toLowerCase().includes(categoryFilter.toLowerCase())
+      );
     }
 
     if (!garments || garments.length < 2) {

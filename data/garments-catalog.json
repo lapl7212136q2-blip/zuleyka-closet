@@ -1,145 +1,5 @@
 [
   {
-    "id": "1",
-    "name": "Blue Dress",
-    "category": "dress",
-    "primary_color": "blue",
-    "color": "blue",
-    "pattern": "solid",
-    "style": "casual",
-    "season": "spring",
-    "fit_type": "fitted",
-    "material": "cotton",
-    "image_path": "/photos/garment_01_blue_dress.jpg",
-    "analysis_status": "completed"
-  },
-  {
-    "id": "2",
-    "name": "Red Blouse",
-    "category": "top",
-    "primary_color": "red",
-    "color": "red",
-    "pattern": "solid",
-    "style": "formal",
-    "season": "summer",
-    "fit_type": "fitted",
-    "material": "polyester",
-    "image_path": "/photos/garment_02_red_blouse.jpg",
-    "analysis_status": "completed"
-  },
-  {
-    "id": "3",
-    "name": "Black Pants",
-    "category": "pants",
-    "primary_color": "black",
-    "color": "black",
-    "pattern": "solid",
-    "style": "formal",
-    "season": "all-season",
-    "fit_type": "regular",
-    "material": "wool",
-    "image_path": "/photos/garment_03_black_pants.jpg",
-    "analysis_status": "completed"
-  },
-  {
-    "id": "4",
-    "name": "White Shirt",
-    "category": "top",
-    "primary_color": "white",
-    "color": "white",
-    "pattern": "solid",
-    "style": "casual",
-    "season": "summer",
-    "fit_type": "loose",
-    "material": "cotton",
-    "image_path": "/photos/garment_04_white_shirt.jpg",
-    "analysis_status": "completed"
-  },
-  {
-    "id": "5",
-    "name": "Green Jacket",
-    "category": "outerwear",
-    "primary_color": "green",
-    "color": "green",
-    "pattern": "solid",
-    "style": "casual",
-    "season": "fall",
-    "fit_type": "regular",
-    "material": "cotton",
-    "image_path": "/photos/garment_05_green_jacket.jpg",
-    "analysis_status": "completed"
-  },
-  {
-    "id": "6",
-    "name": "Yellow Skirt",
-    "category": "bottom",
-    "primary_color": "yellow",
-    "color": "yellow",
-    "pattern": "solid",
-    "style": "casual",
-    "season": "summer",
-    "fit_type": "fitted",
-    "material": "cotton",
-    "image_path": "/photos/garment_06_yellow_skirt.jpg",
-    "analysis_status": "completed"
-  },
-  {
-    "id": "7",
-    "name": "Purple Top",
-    "category": "top",
-    "primary_color": "purple",
-    "color": "purple",
-    "pattern": "solid",
-    "style": "casual",
-    "season": "winter",
-    "fit_type": "fitted",
-    "material": "wool",
-    "image_path": "/photos/garment_07_purple_top.jpg",
-    "analysis_status": "completed"
-  },
-  {
-    "id": "8",
-    "name": "Pink Dress",
-    "category": "dress",
-    "primary_color": "pink",
-    "color": "pink",
-    "pattern": "solid",
-    "style": "casual",
-    "season": "spring",
-    "fit_type": "loose",
-    "material": "linen",
-    "image_path": "/photos/garment_08_pink_dress.jpg",
-    "analysis_status": "completed"
-  },
-  {
-    "id": "original-1",
-    "name": "Blue Casual Dress",
-    "category": "dress",
-    "primary_color": "blue",
-    "color": "blue",
-    "pattern": "solid",
-    "style": "casual",
-    "season": "spring",
-    "fit_type": "fitted",
-    "material": "cotton",
-    "image_path": "/photos/photo_a8a10987-2b48-4d12-beac-643683510d94.jpg",
-    "analysis_status": "completed"
-  },
-  {
-    "id": "original-2",
-    "name": "White Formal Blouse",
-    "category": "top",
-    "primary_color": "white",
-    "color": "white",
-    "pattern": "solid",
-    "style": "formal",
-    "season": "summer",
-    "fit_type": "fitted",
-    "material": "polyester",
-    "image_path": "/photos/photo_395f670e-2079-4252-bb84-43bcc396f76b.jpg",
-    "analysis_status": "completed"
-  },
-  {
     "id": "immich-1",
     "name": "Vestido Estampado Artístico",
     "category": "dress",
@@ -151,7 +11,8 @@
     "fit_type": "loose",
     "material": "cotton",
     "image_path": "/photos/vestido_estampado_artistico.jpg",
-    "analysis_status": "completed"
+    "analysis_status": "completed",
+    "cutout_path": "/photos/cutouts/vestido_estampado_artistico.webp"
   },
   {
     "id": "immich-2",
@@ -168,62 +29,6 @@
     "analysis_status": "completed"
   },
   {
-    "id": "immich-3",
-    "name": "Outfit Blanco (vista 2)",
-    "category": "outfit",
-    "primary_color": "white",
-    "color": "white",
-    "pattern": "solid",
-    "style": "casual",
-    "season": "summer",
-    "fit_type": "loose",
-    "material": "linen",
-    "image_path": "/photos/outfit_blanco_reflejo_2.jpg",
-    "analysis_status": "completed"
-  },
-  {
-    "id": "immich-4",
-    "name": "Outfit Blanco (vista 3)",
-    "category": "outfit",
-    "primary_color": "white",
-    "color": "white",
-    "pattern": "solid",
-    "style": "casual",
-    "season": "summer",
-    "fit_type": "loose",
-    "material": "linen",
-    "image_path": "/photos/outfit_blanco_reflejo_3.jpg",
-    "analysis_status": "completed"
-  },
-  {
-    "id": "immich-5",
-    "name": "Vestido Estampado (selfie)",
-    "category": "dress",
-    "primary_color": "multicolor",
-    "color": "multicolor",
-    "pattern": "print",
-    "style": "casual",
-    "season": "summer",
-    "fit_type": "loose",
-    "material": "cotton",
-    "image_path": "/photos/vestido_estampado_selfie.jpg",
-    "analysis_status": "completed"
-  },
-  {
-    "id": "immich-6",
-    "name": "Vestido Estampado (grupo)",
-    "category": "dress",
-    "primary_color": "multicolor",
-    "color": "multicolor",
-    "pattern": "print",
-    "style": "casual",
-    "season": "summer",
-    "fit_type": "loose",
-    "material": "cotton",
-    "image_path": "/photos/vestido_estampado_grupo.jpg",
-    "analysis_status": "completed"
-  },
-  {
     "id": "immich-7",
     "name": "Suéter Guinda",
     "category": "top",
@@ -235,7 +40,8 @@
     "fit_type": "regular",
     "material": "knit",
     "image_path": "/photos/sueter_guinda_pintura.jpg",
-    "analysis_status": "completed"
+    "analysis_status": "completed",
+    "cutout_path": "/photos/cutouts/sueter_guinda_pintura.webp"
   },
   {
     "id": "immich-8",
@@ -249,7 +55,8 @@
     "fit_type": "regular",
     "material": "cotton",
     "image_path": "/photos/blusa_roja_selfie.jpg",
-    "analysis_status": "completed"
+    "analysis_status": "completed",
+    "cutout_path": "/photos/cutouts/blusa_roja_selfie.webp"
   },
   {
     "id": "immich-9",
@@ -263,7 +70,8 @@
     "fit_type": "regular",
     "material": "knit",
     "image_path": "/photos/sueter_tejido_naranja.jpg",
-    "analysis_status": "completed"
+    "analysis_status": "completed",
+    "cutout_path": "/photos/cutouts/sueter_tejido_naranja.webp"
   },
   {
     "id": "immich-10",
@@ -277,7 +85,8 @@
     "fit_type": "regular",
     "material": "cotton",
     "image_path": "/photos/top_rayado_chamarra_cafe.jpg",
-    "analysis_status": "completed"
+    "analysis_status": "completed",
+    "cutout_path": "/photos/cutouts/top_rayado_chamarra_cafe.webp"
   },
   {
     "id": "immich-11",
@@ -291,7 +100,8 @@
     "fit_type": "regular",
     "material": "polyester",
     "image_path": "/photos/top_dorado_pantalon_blanco.jpg",
-    "analysis_status": "completed"
+    "analysis_status": "completed",
+    "cutout_path": "/photos/cutouts/top_dorado_pantalon_blanco.webp"
   },
   {
     "id": "immich-12",
@@ -305,7 +115,8 @@
     "fit_type": "loose",
     "material": "cotton",
     "image_path": "/photos/vestido_multicolor_asimetrico.jpg",
-    "analysis_status": "completed"
+    "analysis_status": "completed",
+    "cutout_path": "/photos/cutouts/vestido_multicolor_asimetrico.webp"
   },
   {
     "id": "immich-13",
@@ -319,7 +130,8 @@
     "fit_type": "regular",
     "material": "cotton",
     "image_path": "/photos/vestido_oliva_sin_mangas.jpg",
-    "analysis_status": "completed"
+    "analysis_status": "completed",
+    "cutout_path": "/photos/cutouts/vestido_oliva_sin_mangas.webp"
   },
   {
     "id": "immich-14",
@@ -333,7 +145,8 @@
     "fit_type": "regular",
     "material": "cotton",
     "image_path": "/photos/top_naranja_falda_amarilla.jpg",
-    "analysis_status": "completed"
+    "analysis_status": "completed",
+    "cutout_path": "/photos/cutouts/top_naranja_falda_amarilla.webp"
   },
   {
     "id": "immich-15",
@@ -347,7 +160,8 @@
     "fit_type": "fitted",
     "material": "polyester",
     "image_path": "/photos/conjunto_deportivo_negro.jpg",
-    "analysis_status": "completed"
+    "analysis_status": "completed",
+    "cutout_path": "/photos/cutouts/conjunto_deportivo_negro.webp"
   },
   {
     "id": "immich-16",
@@ -361,7 +175,8 @@
     "fit_type": "fitted",
     "material": "polyester",
     "image_path": "/photos/vestido_verde_esmeralda.jpg",
-    "analysis_status": "completed"
+    "analysis_status": "completed",
+    "cutout_path": "/photos/cutouts/vestido_verde_esmeralda.webp"
   },
   {
     "id": "immich-17",
@@ -375,7 +190,8 @@
     "fit_type": "regular",
     "material": "cotton",
     "image_path": "/photos/blusa_blanca_pantalon_amarillo.jpg",
-    "analysis_status": "completed"
+    "analysis_status": "completed",
+    "cutout_path": "/photos/cutouts/blusa_blanca_pantalon_amarillo.webp"
   },
   {
     "id": "immich-18",
@@ -389,7 +205,8 @@
     "fit_type": "loose",
     "material": "rayon",
     "image_path": "/photos/pantalon_palazzo_estampado.jpg",
-    "analysis_status": "completed"
+    "analysis_status": "completed",
+    "cutout_path": "/photos/cutouts/pantalon_palazzo_estampado.webp"
   },
   {
     "id": "immich-19",
@@ -403,7 +220,8 @@
     "fit_type": "regular",
     "material": "polyester",
     "image_path": "/photos/vestido_negro_floral.jpg",
-    "analysis_status": "completed"
+    "analysis_status": "completed",
+    "cutout_path": "/photos/cutouts/vestido_negro_floral.webp"
   },
   {
     "id": "immich-20",
@@ -417,7 +235,8 @@
     "fit_type": "regular",
     "material": "wool",
     "image_path": "/photos/abrigo_menta_invierno.jpg",
-    "analysis_status": "completed"
+    "analysis_status": "completed",
+    "cutout_path": "/photos/cutouts/abrigo_menta_invierno.webp"
   },
   {
     "id": "immich-21",
@@ -431,7 +250,8 @@
     "fit_type": "regular",
     "material": "cotton",
     "image_path": "/photos/chamarra_amarilla_conjunto_negro.jpg",
-    "analysis_status": "completed"
+    "analysis_status": "completed",
+    "cutout_path": "/photos/cutouts/chamarra_amarilla_conjunto_negro.webp"
   },
   {
     "id": "immich-22",
@@ -445,6 +265,7 @@
     "fit_type": "regular",
     "material": "leather",
     "image_path": "/photos/chamarra_piel_cafe.jpg",
-    "analysis_status": "completed"
+    "analysis_status": "completed",
+    "cutout_path": "/photos/cutouts/chamarra_piel_cafe.webp"
   }
 ]
