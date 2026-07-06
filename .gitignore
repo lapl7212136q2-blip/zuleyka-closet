@@ -19,3 +19,6 @@ env/
 *.swo
 *~
 .python-version
+
+# Local Netlify folder
+.netlify
