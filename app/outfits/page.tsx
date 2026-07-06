@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import AuthModal from '@/components/AuthModal';
+import { useAuth } from '@/lib/auth-context';
 
 interface Outfit {
   id: string;
@@ -23,14 +25,16 @@ interface Garment {
   photo_url?: string;
 }
 
-const DEMO_USER_ID = 'user-123';
-
 export default function OutfitsPage() {
+  const { user, loading: authLoading, signOut } = useAuth();
+  const [showAuthModal, setShowAuthModal] = useState(false);
   const [outfits, setOutfits] = useState<Outfit[]>([]);
   const [garments, setGarments] = useState<Map<string, Garment>>(new Map());
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showCreateForm, setShowCreateForm] = useState(false);
+
+  const userId = user?.id || 'user-123';
   const [newOutfit, setNewOutfit] = useState({
     name: '',
     description: '',
@@ -56,7 +60,7 @@ export default function OutfitsPage() {
       setGarments(garmentMap);
 
       // Fetch outfits
-      const outfitsRes = await fetch(`/api/outfits?user_id=${DEMO_USER_ID}`);
+      const outfitsRes = await fetch(`/api/outfits?user_id=${userId}`);
       const outfitsData = await outfitsRes.json();
       setOutfits(outfitsData.outfits || []);
       setError(null);
@@ -75,7 +79,7 @@ export default function OutfitsPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          user_id: DEMO_USER_ID,
+          user_id: userId,
           ...newOutfit,
           garment_ids: [], // Empty for now, can be edited later
         }),
@@ -91,6 +95,10 @@ export default function OutfitsPage() {
     }
   };
 
+  if (authLoading) {
+    return <div style={{ padding: '2rem', textAlign: 'center' }}>Cargando...</div>;
+  }
+
   return (
     <main>
       <header className="header">
@@ -100,7 +108,7 @@ export default function OutfitsPage() {
               <h1>👗 Galería de Outfits</h1>
               <p>Tus combinaciones de moda</p>
             </div>
-            <nav style={{ display: 'flex', gap: '1rem' }}>
+            <nav style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
               <Link href="/" style={{ padding: '0.5rem 1rem', background: '#fff', borderRadius: '6px', textDecoration: 'none', color: '#333' }}>
                 🏠 Inicio
               </Link>
@@ -110,10 +118,32 @@ export default function OutfitsPage() {
               <Link href="/outfits" style={{ padding: '0.5rem 1rem', background: '#e0f0ff', borderRadius: '6px', textDecoration: 'none', color: '#0066cc' }}>
                 👗 Outfits
               </Link>
+              {user ? (
+                <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                  <span style={{ padding: '0.5rem 1rem', background: '#f0f0f0', borderRadius: '6px', fontSize: '0.9rem' }}>
+                    👤 {user.user_metadata?.name || user.email?.split('@')[0] || 'User'}
+                  </span>
+                  <button
+                    onClick={() => signOut()}
+                    style={{ padding: '0.5rem 1rem', background: '#f0f0f0', border: '1px solid #ddd', borderRadius: '6px', cursor: 'pointer' }}
+                  >
+                    Salir
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={() => setShowAuthModal(true)}
+                  style={{ padding: '0.5rem 1rem', background: '#0066cc', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer' }}
+                >
+                  Inicia Sesión
+                </button>
+              )}
             </nav>
           </div>
         </div>
       </header>
+
+      {showAuthModal && <AuthModal onClose={() => setShowAuthModal(false)} />}
 
       <div className="container">
         {error && <div className="error">{error}</div>}

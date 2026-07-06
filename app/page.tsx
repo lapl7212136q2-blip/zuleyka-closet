@@ -5,6 +5,8 @@ import Link from 'next/link';
 import GarmentCard from '@/components/GarmentCard';
 import FilterPanel from '@/components/FilterPanel';
 import PhotoUpload from '@/components/PhotoUpload';
+import AuthModal from '@/components/AuthModal';
+import { useAuth } from '@/lib/auth-context';
 
 interface Garment {
   id: string;
@@ -19,6 +21,8 @@ interface Garment {
 }
 
 export default function Home() {
+  const { user, loading: authLoading, signOut } = useAuth();
+  const [showAuthModal, setShowAuthModal] = useState(false);
   const [garments, setGarments] = useState<Garment[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -28,6 +32,8 @@ export default function Home() {
     style: '',
     season: '',
   });
+
+  const userId = user?.id || 'user-123'; // Demo user if not logged in
 
   useEffect(() => {
     fetchGarments();
@@ -65,7 +71,7 @@ export default function Home() {
               <h1>✨ Clóset de Zuleyka</h1>
               <p>Tu asistente personal de moda con IA</p>
             </div>
-            <nav style={{ display: 'flex', gap: '1rem' }}>
+            <nav style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
               <Link href="/" style={{ padding: '0.5rem 1rem', background: '#fff', borderRadius: '6px', textDecoration: 'none', color: '#333' }}>
                 🏠 Inicio
               </Link>
@@ -75,10 +81,34 @@ export default function Home() {
               <Link href="/outfits" style={{ padding: '0.5rem 1rem', background: '#e0f0ff', borderRadius: '6px', textDecoration: 'none', color: '#0066cc' }}>
                 👗 Outfits
               </Link>
+              {!authLoading && (
+                user ? (
+                  <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                    <span style={{ padding: '0.5rem 1rem', background: '#f0f0f0', borderRadius: '6px', fontSize: '0.9rem' }}>
+                      👤 {user.user_metadata?.name || user.email?.split('@')[0] || 'User'}
+                    </span>
+                    <button
+                      onClick={() => signOut()}
+                      style={{ padding: '0.5rem 1rem', background: '#f0f0f0', border: '1px solid #ddd', borderRadius: '6px', cursor: 'pointer' }}
+                    >
+                      Salir
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => setShowAuthModal(true)}
+                    style={{ padding: '0.5rem 1rem', background: '#0066cc', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer' }}
+                  >
+                    Inicia Sesión
+                  </button>
+                )
+              )}
             </nav>
           </div>
         </div>
       </header>
+
+      {showAuthModal && <AuthModal onClose={() => setShowAuthModal(false)} />}
 
       <div className="container">
         <div style={{ marginBottom: '2rem' }}>
@@ -109,7 +139,7 @@ export default function Home() {
             </p>
             <div className="garments-grid">
               {garments.map((garment) => (
-                <GarmentCard key={garment.id} garment={garment} />
+                <GarmentCard key={garment.id} garment={garment} userId={userId} />
               ))}
             </div>
           </>

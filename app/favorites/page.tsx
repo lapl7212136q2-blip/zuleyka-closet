@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import GarmentCard from '@/components/GarmentCard';
+import AuthModal from '@/components/AuthModal';
+import { useAuth } from '@/lib/auth-context';
 
 interface Favorite {
   id: string;
@@ -22,12 +24,14 @@ interface Garment {
   photo_url?: string;
 }
 
-const DEMO_USER_ID = 'user-123';
-
 export default function FavoritesPage() {
+  const { user, loading: authLoading, signOut } = useAuth();
+  const [showAuthModal, setShowAuthModal] = useState(false);
   const [favorites, setFavorites] = useState<Garment[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const userId = user?.id || 'user-123';
 
   useEffect(() => {
     fetchFavorites();
@@ -36,7 +40,7 @@ export default function FavoritesPage() {
   const fetchFavorites = async () => {
     try {
       setLoading(true);
-      const res = await fetch(`/api/favorites?user_id=${DEMO_USER_ID}`);
+      const res = await fetch(`/api/favorites?user_id=${userId}`);
       if (!res.ok) throw new Error('Error fetching favorites');
 
       const data = await res.json();
@@ -66,6 +70,10 @@ export default function FavoritesPage() {
     }
   };
 
+  if (authLoading) {
+    return <div style={{ padding: '2rem', textAlign: 'center' }}>Cargando...</div>;
+  }
+
   return (
     <main>
       <header className="header">
@@ -75,7 +83,7 @@ export default function FavoritesPage() {
               <h1>❤️ Mis Favoritas</h1>
               <p>Tus prendas favoritas</p>
             </div>
-            <nav style={{ display: 'flex', gap: '1rem' }}>
+            <nav style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
               <Link href="/" style={{ padding: '0.5rem 1rem', background: '#fff', borderRadius: '6px', textDecoration: 'none', color: '#333' }}>
                 🏠 Inicio
               </Link>
@@ -85,10 +93,32 @@ export default function FavoritesPage() {
               <Link href="/outfits" style={{ padding: '0.5rem 1rem', background: '#e0f0ff', borderRadius: '6px', textDecoration: 'none', color: '#0066cc' }}>
                 👗 Outfits
               </Link>
+              {user ? (
+                <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                  <span style={{ padding: '0.5rem 1rem', background: '#f0f0f0', borderRadius: '6px', fontSize: '0.9rem' }}>
+                    👤 {user.user_metadata?.name || user.email?.split('@')[0] || 'User'}
+                  </span>
+                  <button
+                    onClick={() => signOut()}
+                    style={{ padding: '0.5rem 1rem', background: '#f0f0f0', border: '1px solid #ddd', borderRadius: '6px', cursor: 'pointer' }}
+                  >
+                    Salir
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={() => setShowAuthModal(true)}
+                  style={{ padding: '0.5rem 1rem', background: '#0066cc', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer' }}
+                >
+                  Inicia Sesión
+                </button>
+              )}
             </nav>
           </div>
         </div>
       </header>
+
+      {showAuthModal && <AuthModal onClose={() => setShowAuthModal(false)} />}
 
       <div className="container">
         {error && <div className="error">{error}</div>}
@@ -115,7 +145,7 @@ export default function FavoritesPage() {
                 <GarmentCard
                   key={garment.id}
                   garment={garment}
-                  userId={DEMO_USER_ID}
+                  userId={userId}
                   isFavorited={true}
                   onFavoriteChange={(fav) => {
                     if (!fav) {
