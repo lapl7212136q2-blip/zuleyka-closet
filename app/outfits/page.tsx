@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import AuthModal from '@/components/AuthModal';
+import OutfitSuggester from '@/components/OutfitSuggester';
 import { useAuth } from '@/lib/auth-context';
 
 interface Outfit {
@@ -147,6 +148,28 @@ export default function OutfitsPage() {
 
       <div className="container">
         {error && <div className="error">{error}</div>}
+
+        <OutfitSuggester
+          onSaveOutfit={async (outfit) => {
+            try {
+              const res = await fetch('/api/outfits', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  user_id: userId,
+                  ...outfit,
+                }),
+              });
+
+              if (res.ok) {
+                setNewOutfit({ name: '', description: '', occasion: 'casual', season: 'all-season' });
+                fetchData();
+              }
+            } catch (err) {
+              setError('Error saving outfit');
+            }
+          }}
+        />
 
         <div style={{ marginBottom: '2rem' }}>
           <button
