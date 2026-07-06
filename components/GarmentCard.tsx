@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Image from 'next/image';
 
 interface Garment {
   id: string;
@@ -8,7 +9,8 @@ interface Garment {
   style: string;
   season: string;
   confidence: number;
-  photo_drive_id: string;
+  photo_url?: string;
+  photo_drive_id?: string;
 }
 
 const GARMENT_EMOJIS: Record<string, string> = {
@@ -39,8 +41,12 @@ export default function GarmentCard({ garment }: { garment: Garment }) {
 
   return (
     <div className="garment-card">
-      <div className="garment-image" style={{ background: seasonColor }}>
-        <span>{emoji}</span>
+      <div className="garment-image" style={{ background: garment.photo_url ? '#fff' : seasonColor }}>
+        {garment.photo_url ? (
+          <img src={garment.photo_url} alt={garment.garment_type} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+        ) : (
+          <span>{emoji}</span>
+        )}
       </div>
       <div className="garment-info">
         <div className="garment-type">{garment.garment_type}</div>

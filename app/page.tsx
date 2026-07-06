@@ -12,7 +12,8 @@ interface Garment {
   style: string;
   season: string;
   confidence: number;
-  photo_drive_id: string;
+  photo_url?: string;
+  photo_drive_id?: string;
 }
 
 export default function Home() {

@@ -49,7 +49,7 @@ export async function GET(request: NextRequest) {
         style: 'casual',
         season: 'spring',
         confidence: 0.95,
-        photo_drive_id: 'photo_1'
+        photo_url: '/photos/photo_a8a10987-2b48-4d12-beac-643683510d94.jpg'
       },
       {
         id: '2',
@@ -59,7 +59,7 @@ export async function GET(request: NextRequest) {
         style: 'formal',
         season: 'summer',
         confidence: 0.92,
-        photo_drive_id: 'photo_2'
+        photo_url: '/photos/photo_395f670e-2079-4252-bb84-43bcc396f76b.jpg'
       }
     ];
 
