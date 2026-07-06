@@ -39,71 +39,42 @@ export async function GET(request: NextRequest) {
     const style = searchParams.get('style')?.toLowerCase();
     const season = searchParams.get('season')?.toLowerCase();
 
-    // Demo data (hardcoded for testing)
-    let garments: any[] = [
-      {
-        id: '1',
-        garment_type: 'dress',
-        color: 'blue',
-        pattern: 'solid',
-        style: 'casual',
-        season: 'spring',
-        confidence: 0.95,
-        photo_url: '/photos/photo_a8a10987-2b48-4d12-beac-643683510d94.jpg'
-      },
-      {
-        id: '2',
-        garment_type: 'blouse',
-        color: 'white',
-        pattern: 'solid',
-        style: 'formal',
-        season: 'summer',
-        confidence: 0.92,
-        photo_url: '/photos/photo_395f670e-2079-4252-bb84-43bcc396f76b.jpg'
-      }
-    ];
-
-    // Try Supabase first with timeout
-    if (supabase) {
-      try {
-        let query = supabase
-          .from('garments')
-          .select('*')
-          .eq('analysis_status', 'completed');
-
-        if (type) {
-          query = query.ilike('category', `%${type}%`);
-        }
-        if (color) {
-          query = query.ilike('primary_color', `%${color}%`);
-        }
-        if (style) {
-          query = query.ilike('style', `%${style}%`);
-        }
-        if (season) {
-          query = query.ilike('season', `%${season}%`);
-        }
-
-        const timeoutPromise = new Promise((_, reject) =>
-          setTimeout(() => reject(new Error('Supabase query timeout')), 2000)
-        );
-
-        const { data, error } = await Promise.race([query, timeoutPromise]);
-        if (!error && data && data.length > 0) {
-          garments = data;
-        }
-      } catch (err) {
-        console.warn('Supabase unavailable, using demo data', err);
-      }
+    if (!supabase) {
+      return NextResponse.json(
+        { error: 'Supabase not configured', garments: [] },
+        { status: 500 }
+      );
     }
 
-    // Apply filters to demo data
-    let filteredGarments = garments;
-    if (type || color || style || season) {
-      filteredGarments = filterGarments(garments, type, color, style, season);
+    let query = supabase
+      .from('garments')
+      .select('*')
+      .eq('analysis_status', 'completed');
+
+    if (type) {
+      query = query.ilike('category', `%${type}%`);
+    }
+    if (color) {
+      query = query.ilike('primary_color', `%${color}%`);
+    }
+    if (style) {
+      query = query.ilike('style', `%${style}%`);
+    }
+    if (season) {
+      query = query.ilike('season', `%${season}%`);
     }
 
-    return NextResponse.json({ garments: filteredGarments, total: filteredGarments.length });
+    const { data, error } = await query;
+
+    if (error) {
+      console.error('Supabase error:', error);
+      return NextResponse.json(
+        { error: error.message, garments: [] },
+        { status: 500 }
+      );
+    }
+
+    return NextResponse.json({ garments: data || [], total: data?.length || 0 });
   } catch (error: any) {
     console.error('API error:', error);
     return NextResponse.json(
