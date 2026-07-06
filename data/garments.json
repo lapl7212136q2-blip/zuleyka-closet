@@ -1,0 +1,22 @@
+﻿[
+  {
+    "id": "1",
+    "garment_type": "dress",
+    "color": "blue",
+    "pattern": "solid",
+    "style": "casual",
+    "season": "spring",
+    "confidence": 0.95,
+    "photo_drive_id": "photo_1"
+  },
+  {
+    "id": "2",
+    "garment_type": "blouse",
+    "color": "white",
+    "pattern": "solid",
+    "style": "formal",
+    "season": "summer",
+    "confidence": 0.92,
+    "photo_drive_id": "photo_2"
+  }
+]

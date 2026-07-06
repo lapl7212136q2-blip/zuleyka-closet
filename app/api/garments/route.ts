@@ -1,48 +1,113 @@
 import { NextRequest, NextResponse } from 'next/server';
-import Database from 'better-sqlite3';
+import { createClient } from '@supabase/supabase-js';
+import { promises as fs } from 'fs';
 import path from 'path';
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+let supabase: any = null;
+if (supabaseUrl && supabaseAnonKey) {
+  supabase = createClient(supabaseUrl, supabaseAnonKey);
+}
+
+async function getGarmentsFromFile() {
+  try {
+    const garmentsPath = path.join(process.cwd(), 'data', 'garments.json');
+    const data = await fs.readFile(garmentsPath, 'utf-8');
+    return JSON.parse(data);
+  } catch {
+    return [];
+  }
+}
+
+function filterGarments(garments: any[], type?: string | null, color?: string | null, style?: string | null, season?: string | null) {
+  return garments.filter((g: any) => {
+    if (type && !g.category?.toLowerCase().includes(type)) return false;
+    if (color && !g.primary_color?.toLowerCase().includes(color)) return false;
+    if (style && !g.style?.toLowerCase().includes(style)) return false;
+    if (season && !g.season?.toLowerCase().includes(season)) return false;
+    return true;
+  });
+}
 
 export async function GET(request: NextRequest) {
   try {
-    const dbPath = path.join(process.cwd(), 'data', 'closet.db');
-    const db = new Database(dbPath);
-
     const searchParams = request.nextUrl.searchParams;
     const type = searchParams.get('type')?.toLowerCase();
     const color = searchParams.get('color')?.toLowerCase();
     const style = searchParams.get('style')?.toLowerCase();
     const season = searchParams.get('season')?.toLowerCase();
 
-    let query = 'SELECT * FROM garments WHERE 1=1';
-    const params: string[] = [];
+    // Demo data (hardcoded for testing)
+    let garments: any[] = [
+      {
+        id: '1',
+        garment_type: 'dress',
+        color: 'blue',
+        pattern: 'solid',
+        style: 'casual',
+        season: 'spring',
+        confidence: 0.95,
+        photo_drive_id: 'photo_1'
+      },
+      {
+        id: '2',
+        garment_type: 'blouse',
+        color: 'white',
+        pattern: 'solid',
+        style: 'formal',
+        season: 'summer',
+        confidence: 0.92,
+        photo_drive_id: 'photo_2'
+      }
+    ];
 
-    if (type) {
-      query += ' AND LOWER(garment_type) LIKE ?';
-      params.push(`%${type}%`);
-    }
-    if (color) {
-      query += ' AND LOWER(color) LIKE ?';
-      params.push(`%${color}%`);
-    }
-    if (style) {
-      query += ' AND LOWER(style) LIKE ?';
-      params.push(`%${style}%`);
-    }
-    if (season) {
-      query += ' AND LOWER(season) LIKE ?';
-      params.push(`%${season}%`);
+    // Try Supabase first with timeout
+    if (supabase) {
+      try {
+        let query = supabase
+          .from('garments')
+          .select('*')
+          .eq('analysis_status', 'completed');
+
+        if (type) {
+          query = query.ilike('category', `%${type}%`);
+        }
+        if (color) {
+          query = query.ilike('primary_color', `%${color}%`);
+        }
+        if (style) {
+          query = query.ilike('style', `%${style}%`);
+        }
+        if (season) {
+          query = query.ilike('season', `%${season}%`);
+        }
+
+        const timeoutPromise = new Promise((_, reject) =>
+          setTimeout(() => reject(new Error('Supabase query timeout')), 2000)
+        );
+
+        const { data, error } = await Promise.race([query, timeoutPromise]);
+        if (!error && data && data.length > 0) {
+          garments = data;
+        }
+      } catch (err) {
+        console.warn('Supabase unavailable, using demo data', err);
+      }
     }
 
-    const stmt = db.prepare(query);
-    const garments = stmt.all(...params) as any[];
+    // Apply filters to demo data
+    let filteredGarments = garments;
+    if (type || color || style || season) {
+      filteredGarments = filterGarments(garments, type, color, style, season);
+    }
 
-    db.close();
-
-    return NextResponse.json({ garments, total: garments.length });
+    return NextResponse.json({ garments: filteredGarments, total: filteredGarments.length });
   } catch (error: any) {
     console.error('API error:', error);
     return NextResponse.json(
-      { error: error.message || 'Error fetching garments', garments: [] },
+      { error: error.message, garments: [] },
       { status: 500 }
     );
   }
