@@ -106,11 +106,41 @@ export function swatchStyle(g: Garment): CSSProperties {
   return { background: COLOR_HEX[c] || '#ccc' };
 }
 
-export async function fetchGarments(): Promise<Garment[]> {
+export async function fetchGarments(includeHidden = false): Promise<Garment[]> {
   const res = await fetch('/api/garments');
   if (!res.ok) throw new Error('No se pudieron cargar las prendas');
   const data = await res.json();
-  return data.garments || [];
+  const garments: Garment[] = data.garments || [];
+  if (includeHidden) return garments;
+  const hidden = getHidden();
+  return garments.filter((g) => !hidden.has(g.id));
+}
+
+// ---------- prendas eliminadas/ocultas (localStorage) ----------
+
+const HIDDEN_KEY = 'zk-hidden';
+
+export function getHidden(): Set<string> {
+  if (typeof window === 'undefined') return new Set();
+  try {
+    return new Set(JSON.parse(localStorage.getItem(HIDDEN_KEY) || '[]'));
+  } catch {
+    return new Set();
+  }
+}
+
+export function hideGarment(id: string): Set<string> {
+  const hidden = getHidden();
+  hidden.add(id);
+  localStorage.setItem(HIDDEN_KEY, JSON.stringify([...hidden]));
+  return hidden;
+}
+
+export function unhideGarment(id: string): Set<string> {
+  const hidden = getHidden();
+  hidden.delete(id);
+  localStorage.setItem(HIDDEN_KEY, JSON.stringify([...hidden]));
+  return hidden;
 }
 
 // ---------- favoritas (localStorage) ----------

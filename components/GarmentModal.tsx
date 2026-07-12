@@ -17,14 +17,16 @@ interface Props {
   favorited: boolean;
   onToggleFav: (id: string) => void;
   onClose: () => void;
+  onDelete?: (id: string) => void;
 }
 
 type ViewMode = 'cutout' | 'photo' | '360';
 
-export default function GarmentModal({ garment, favorited, onToggleFav, onClose }: Props) {
+export default function GarmentModal({ garment, favorited, onToggleFav, onClose, onDelete }: Props) {
   const cutout = garment.cutout_path;
   const photo = garment.image_path || garment.photo_url;
   const [mode, setMode] = useState<ViewMode>(cutout ? 'cutout' : 'photo');
+  const [confirmDelete, setConfirmDelete] = useState(false);
   const img = mode === 'photo' ? photo : cutout || photo;
 
   const specs: Array<[string, React.ReactNode]> = [
@@ -89,6 +91,25 @@ export default function GarmentModal({ garment, favorited, onToggleFav, onClose 
               </div>
             ))}
           </dl>
+          {onDelete && (
+            <div style={{ marginTop: '1.25rem', display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+              {confirmDelete ? (
+                <>
+                  <span style={{ fontSize: '0.9rem' }}>¿Quitar esta prenda de tu clóset?</span>
+                  <button className="btn btn--danger" onClick={() => onDelete(garment.id)}>
+                    Sí, quitar
+                  </button>
+                  <button className="btn btn--ghost" onClick={() => setConfirmDelete(false)}>
+                    Cancelar
+                  </button>
+                </>
+              ) : (
+                <button className="btn btn--ghost btn--danger-ghost" onClick={() => setConfirmDelete(true)}>
+                  🗑 Eliminar prenda
+                </button>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </div>

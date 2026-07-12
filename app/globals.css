@@ -687,6 +687,26 @@ body {
   transform: none;
 }
 
+.btn--danger {
+  background: #a83232;
+  color: #fff8f2;
+}
+
+.btn--danger:hover {
+  background: #8c2626;
+  transform: translateY(-1px);
+}
+
+.btn--danger-ghost {
+  color: #a83232;
+  border-color: rgba(168, 50, 50, 0.35);
+}
+
+.btn--danger-ghost:hover {
+  border-color: #a83232;
+  color: #8c2626;
+}
+
 /* ---------- Panels / cards ---------- */
 
 .panel {

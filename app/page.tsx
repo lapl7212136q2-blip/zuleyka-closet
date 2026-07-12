@@ -9,6 +9,11 @@ import {
   fetchGarments,
   getFavs,
   toggleFav,
+  getHidden,
+  hideGarment,
+  unhideGarment,
+  garmentImage,
+  garmentName,
   CATEGORY_PLURAL,
   SEASON_LABELS,
 } from '@/lib/closet';
@@ -21,6 +26,8 @@ export default function ClosetPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [favs, setFavs] = useState<Set<string>>(new Set());
+  const [hidden, setHidden] = useState<Set<string>>(new Set());
+  const [showHidden, setShowHidden] = useState(false);
   const [category, setCategory] = useState<string | null>(null);
   const [season, setSeason] = useState<string | null>(null);
   const [selected, setSelected] = useState<Garment | null>(null);
@@ -28,7 +35,8 @@ export default function ClosetPage() {
 
   useEffect(() => {
     setFavs(getFavs());
-    fetchGarments()
+    setHidden(getHidden());
+    fetchGarments(true)
       .then(setGarments)
       .catch(() => setError('No se pudieron cargar las prendas.'))
       .finally(() => setLoading(false));
@@ -37,12 +45,29 @@ export default function ClosetPage() {
   const filtered = useMemo(
     () =>
       garments.filter((g) => {
+        if (hidden.has(g.id)) return false;
         if (category && g.category !== category) return false;
         if (season && g.season !== season && g.season !== 'all') return false;
         return true;
       }),
-    [garments, category, season]
+    [garments, hidden, category, season]
   );
+
+  const hiddenGarments = useMemo(
+    () => garments.filter((g) => hidden.has(g.id)),
+    [garments, hidden]
+  );
+
+  const handleDelete = (id: string) => {
+    setHidden(new Set(hideGarment(id)));
+    setSelected(null);
+  };
+
+  const handleRestore = (id: string) => {
+    const next = new Set(unhideGarment(id));
+    setHidden(next);
+    if (next.size === 0) setShowHidden(false);
+  };
 
   const categories = useMemo(() => {
     const present = new Set(garments.map((g) => g.category));
@@ -89,7 +114,36 @@ export default function ClosetPage() {
             {SEASON_LABELS[s]}
           </button>
         ))}
+        {hiddenGarments.length > 0 && (
+          <button
+            className={`chip ${showHidden ? 'active' : ''}`}
+            onClick={() => setShowHidden(!showHidden)}
+          >
+            🗑 Eliminadas ({hiddenGarments.length})
+          </button>
+        )}
       </div>
+
+      {showHidden && hiddenGarments.length > 0 && (
+        <div style={{ margin: '1.25rem 0' }}>
+          <p className="count-note">Prendas eliminadas — puedes recuperarlas:</p>
+          <div className="garment-grid">
+            {hiddenGarments.map((g) => (
+              <article className="g-card" key={g.id} style={{ opacity: 0.75 }}>
+                <div className="g-card__stage">
+                  {garmentImage(g) && <img src={garmentImage(g)} alt={garmentName(g)} loading="lazy" />}
+                </div>
+                <div className="g-card__body">
+                  <h3 className="g-card__name">{garmentName(g)}</h3>
+                  <button className="btn btn--ghost" style={{ marginTop: '0.5rem' }} onClick={() => handleRestore(g.id)}>
+                    ↩ Recuperar
+                  </button>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      )}
 
       {error && <div className="error-note">{error}</div>}
 
@@ -132,6 +186,7 @@ export default function ClosetPage() {
           favorited={favs.has(selected.id)}
           onToggleFav={handleFav}
           onClose={() => setSelected(null)}
+          onDelete={handleDelete}
         />
       )}
 
