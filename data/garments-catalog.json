@@ -1106,7 +1106,8 @@
     "style": "sporty",
     "season": "fall",
     "image_path": "/photos/chamarra_roja_deportiva_parque.jpg",
-    "analysis_status": "completed"
+    "analysis_status": "completed",
+    "cutout_path": "/photos/cutouts_completos/chamarra_roja_deportiva_parque.webp"
   },
   {
     "id": "up-abrigo_crema_mascada_boston",
@@ -1118,7 +1119,8 @@
     "style": "casual",
     "season": "winter",
     "image_path": "/photos/abrigo_crema_mascada_boston.jpg",
-    "analysis_status": "completed"
+    "analysis_status": "completed",
+    "cutout_path": "/photos/cutouts_completos/abrigo_crema_mascada_boston.webp"
   },
   {
     "id": "up-vestido_rojo_strapless_gala",
@@ -1130,7 +1132,8 @@
     "style": "formal",
     "season": "all",
     "image_path": "/photos/vestido_rojo_strapless_gala.jpg",
-    "analysis_status": "completed"
+    "analysis_status": "completed",
+    "cutout_path": "/photos/cutouts_completos/vestido_rojo_strapless_gala.webp"
   },
   {
     "id": "up-blusa_encaje_falda_tul_gris",
@@ -1142,7 +1145,8 @@
     "style": "elegant",
     "season": "winter",
     "image_path": "/photos/blusa_encaje_falda_tul_gris.jpg",
-    "analysis_status": "completed"
+    "analysis_status": "completed",
+    "cutout_path": "/photos/cutouts_completos/blusa_encaje_falda_tul_gris.webp"
   },
   {
     "id": "up-sueter_negro_botas_vino",
@@ -1154,7 +1158,8 @@
     "style": "casual",
     "season": "winter",
     "image_path": "/photos/sueter_negro_botas_vino.jpg",
-    "analysis_status": "completed"
+    "analysis_status": "completed",
+    "cutout_path": "/photos/cutouts_completos/sueter_negro_botas_vino.webp"
   },
   {
     "id": "up-abrigo_negro_bufanda_amarilla",
@@ -1166,7 +1171,8 @@
     "style": "casual",
     "season": "winter",
     "image_path": "/photos/abrigo_negro_bufanda_amarilla.jpg",
-    "analysis_status": "completed"
+    "analysis_status": "completed",
+    "cutout_path": "/photos/cutouts_completos/abrigo_negro_bufanda_amarilla.webp"
   },
   {
     "id": "up-abrigo_cafe_ramo",
@@ -1178,7 +1184,8 @@
     "style": "casual",
     "season": "winter",
     "image_path": "/photos/abrigo_cafe_ramo.jpg",
-    "analysis_status": "completed"
+    "analysis_status": "completed",
+    "cutout_path": "/photos/cutouts_completos/abrigo_cafe_ramo.webp"
   },
   {
     "id": "up-vestido_blanco_verano",
@@ -1190,7 +1197,8 @@
     "style": "elegant",
     "season": "summer",
     "image_path": "/photos/vestido_blanco_verano.jpg",
-    "analysis_status": "completed"
+    "analysis_status": "completed",
+    "cutout_path": "/photos/cutouts_completos/vestido_blanco_verano.webp"
   },
   {
     "id": "up-vestido_blanco_graduacion",
@@ -1202,7 +1210,8 @@
     "style": "elegant",
     "season": "summer",
     "image_path": "/photos/vestido_blanco_graduacion.jpg",
-    "analysis_status": "completed"
+    "analysis_status": "completed",
+    "cutout_path": "/photos/cutouts_completos/vestido_blanco_graduacion.webp"
   },
   {
     "id": "up-vestido_rosa_satin_gala",
@@ -1214,7 +1223,8 @@
     "style": "formal",
     "season": "all",
     "image_path": "/photos/vestido_rosa_satin_gala.jpg",
-    "analysis_status": "completed"
+    "analysis_status": "completed",
+    "cutout_path": "/photos/cutouts_completos/vestido_rosa_satin_gala.webp"
   },
   {
     "id": "up-chamarra_roja_unam",
@@ -1226,7 +1236,8 @@
     "style": "casual",
     "season": "fall",
     "image_path": "/photos/chamarra_roja_unam.jpg",
-    "analysis_status": "completed"
+    "analysis_status": "completed",
+    "cutout_path": "/photos/cutouts_completos/chamarra_roja_unam.webp"
   },
   {
     "id": "up-blusa_rayas_aeropuerto",
@@ -1238,7 +1249,8 @@
     "style": "casual",
     "season": "summer",
     "image_path": "/photos/blusa_rayas_aeropuerto.jpg",
-    "analysis_status": "completed"
+    "analysis_status": "completed",
+    "cutout_path": "/photos/cutouts_completos/blusa_rayas_aeropuerto.webp"
   },
   {
     "id": "up-chamarra_negra_acolchada",
@@ -1250,7 +1262,8 @@
     "style": "casual",
     "season": "winter",
     "image_path": "/photos/chamarra_negra_acolchada.jpg",
-    "analysis_status": "completed"
+    "analysis_status": "completed",
+    "cutout_path": "/photos/cutouts_completos/chamarra_negra_acolchada.webp"
   },
   {
     "id": "up-abrigo_cafe_nieve",
@@ -1262,7 +1275,8 @@
     "style": "casual",
     "season": "winter",
     "image_path": "/photos/abrigo_cafe_nieve.jpg",
-    "analysis_status": "completed"
+    "analysis_status": "completed",
+    "cutout_path": "/photos/cutouts_completos/abrigo_cafe_nieve.webp"
   },
   {
     "id": "up-blusa_blanca_flores_jeans",
@@ -1274,7 +1288,8 @@
     "style": "casual",
     "season": "summer",
     "image_path": "/photos/blusa_blanca_flores_jeans.jpg",
-    "analysis_status": "completed"
+    "analysis_status": "completed",
+    "cutout_path": "/photos/cutouts_completos/blusa_blanca_flores_jeans.webp"
   },
   {
     "id": "up-playera_blanca_pantalon_rojo",
@@ -1286,7 +1301,8 @@
     "style": "casual",
     "season": "summer",
     "image_path": "/photos/playera_blanca_pantalon_rojo.jpg",
-    "analysis_status": "completed"
+    "analysis_status": "completed",
+    "cutout_path": "/photos/cutouts_completos/playera_blanca_pantalon_rojo.webp"
   },
   {
     "id": "up-blusa_coral_pantalon_mostaza",
@@ -1298,7 +1314,8 @@
     "style": "casual",
     "season": "summer",
     "image_path": "/photos/blusa_coral_pantalon_mostaza.jpg",
-    "analysis_status": "completed"
+    "analysis_status": "completed",
+    "cutout_path": "/photos/cutouts_completos/blusa_coral_pantalon_mostaza.webp"
   },
   {
     "id": "up-blusa_azul_marino_encaje",
@@ -1310,7 +1327,8 @@
     "style": "casual",
     "season": "all",
     "image_path": "/photos/blusa_azul_marino_encaje.jpg",
-    "analysis_status": "completed"
+    "analysis_status": "completed",
+    "cutout_path": "/photos/cutouts_completos/blusa_azul_marino_encaje.webp"
   },
   {
     "id": "up-chamarra_negra_blusa_azul",
@@ -1322,7 +1340,8 @@
     "style": "casual",
     "season": "fall",
     "image_path": "/photos/chamarra_negra_blusa_azul.jpg",
-    "analysis_status": "completed"
+    "analysis_status": "completed",
+    "cutout_path": "/photos/cutouts_completos/chamarra_negra_blusa_azul.webp"
   },
   {
     "id": "up-top_azul_strapless_vinedo",
@@ -1334,7 +1353,8 @@
     "style": "casual",
     "season": "summer",
     "image_path": "/photos/top_azul_strapless_vinedo.jpg",
-    "analysis_status": "completed"
+    "analysis_status": "completed",
+    "cutout_path": "/photos/cutouts_completos/top_azul_strapless_vinedo.webp"
   },
   {
     "id": "up-abrigo_negro_rayas_ny",
@@ -1346,7 +1366,8 @@
     "style": "casual",
     "season": "fall",
     "image_path": "/photos/abrigo_negro_rayas_ny.jpg",
-    "analysis_status": "completed"
+    "analysis_status": "completed",
+    "cutout_path": "/photos/cutouts_completos/abrigo_negro_rayas_ny.webp"
   },
   {
     "id": "up-blusa_amarilla_halter",
@@ -1358,7 +1379,8 @@
     "style": "elegant",
     "season": "summer",
     "image_path": "/photos/blusa_amarilla_halter.jpg",
-    "analysis_status": "completed"
+    "analysis_status": "completed",
+    "cutout_path": "/photos/cutouts_completos/blusa_amarilla_halter.webp"
   },
   {
     "id": "up-top_cobre_sombrero_vinicola",
@@ -1370,7 +1392,8 @@
     "style": "casual",
     "season": "summer",
     "image_path": "/photos/top_cobre_sombrero_vinicola.jpg",
-    "analysis_status": "completed"
+    "analysis_status": "completed",
+    "cutout_path": "/photos/cutouts_completos/top_cobre_sombrero_vinicola.webp"
   },
   {
     "id": "up-vestido_verde_floral",
@@ -1382,7 +1405,8 @@
     "style": "elegant",
     "season": "spring",
     "image_path": "/photos/vestido_verde_floral.jpg",
-    "analysis_status": "completed"
+    "analysis_status": "completed",
+    "cutout_path": "/photos/cutouts_completos/vestido_verde_floral.webp"
   },
   {
     "id": "up-vestido_estampado_colorido_fiesta",
@@ -1394,7 +1418,8 @@
     "style": "elegant",
     "season": "summer",
     "image_path": "/photos/vestido_estampado_colorido_fiesta.jpg",
-    "analysis_status": "completed"
+    "analysis_status": "completed",
+    "cutout_path": "/photos/cutouts_completos/vestido_estampado_colorido_fiesta.webp"
   },
   {
     "id": "up-vestido_plata_lentejuelas",
@@ -1406,7 +1431,8 @@
     "style": "formal",
     "season": "all",
     "image_path": "/photos/vestido_plata_lentejuelas.jpg",
-    "analysis_status": "completed"
+    "analysis_status": "completed",
+    "cutout_path": "/photos/cutouts_completos/vestido_plata_lentejuelas.webp"
   },
   {
     "id": "up-vestido_dorado_plisado",
@@ -1418,7 +1444,8 @@
     "style": "formal",
     "season": "all",
     "image_path": "/photos/vestido_dorado_plisado.jpg",
-    "analysis_status": "completed"
+    "analysis_status": "completed",
+    "cutout_path": "/photos/cutouts_completos/vestido_dorado_plisado.webp"
   },
   {
     "id": "up-jumpsuit_blanco_graduacion",
@@ -1430,7 +1457,8 @@
     "style": "elegant",
     "season": "summer",
     "image_path": "/photos/jumpsuit_blanco_graduacion.jpg",
-    "analysis_status": "completed"
+    "analysis_status": "completed",
+    "cutout_path": "/photos/cutouts_completos/jumpsuit_blanco_graduacion.webp"
   },
   {
     "id": "up-vestido_champagne_noche",
@@ -1442,7 +1470,8 @@
     "style": "formal",
     "season": "all",
     "image_path": "/photos/vestido_champagne_noche.jpg",
-    "analysis_status": "completed"
+    "analysis_status": "completed",
+    "cutout_path": "/photos/cutouts_completos/vestido_champagne_noche.webp"
   },
   {
     "id": "up-conjunto_rosa_estampado_vinedo",
@@ -1454,7 +1483,8 @@
     "style": "casual",
     "season": "summer",
     "image_path": "/photos/conjunto_rosa_estampado_vinedo.jpg",
-    "analysis_status": "completed"
+    "analysis_status": "completed",
+    "cutout_path": "/photos/cutouts_completos/conjunto_rosa_estampado_vinedo.webp"
   },
   {
     "id": "up-blusa_floral_multicolor",
@@ -1466,7 +1496,8 @@
     "style": "casual",
     "season": "summer",
     "image_path": "/photos/blusa_floral_multicolor.jpg",
-    "analysis_status": "completed"
+    "analysis_status": "completed",
+    "cutout_path": "/photos/cutouts_completos/blusa_floral_multicolor.webp"
   },
   {
     "id": "up-blusa_blanca_casual",
@@ -1478,7 +1509,8 @@
     "style": "casual",
     "season": "summer",
     "image_path": "/photos/blusa_blanca_casual.jpg",
-    "analysis_status": "completed"
+    "analysis_status": "completed",
+    "cutout_path": "/photos/cutouts_completos/blusa_blanca_casual.webp"
   },
   {
     "id": "up-blusa_estampada_beige",
@@ -1490,7 +1522,8 @@
     "style": "casual",
     "season": "summer",
     "image_path": "/photos/blusa_estampada_beige.jpg",
-    "analysis_status": "completed"
+    "analysis_status": "completed",
+    "cutout_path": "/photos/cutouts_completos/blusa_estampada_beige.webp"
   },
   {
     "id": "up-chaleco_rayas",
@@ -1502,7 +1535,8 @@
     "style": "casual",
     "season": "summer",
     "image_path": "/photos/chaleco_rayas.jpg",
-    "analysis_status": "completed"
+    "analysis_status": "completed",
+    "cutout_path": "/photos/cutouts_completos/chaleco_rayas.webp"
   },
   {
     "id": "up-top_verde_satin_kimono",
@@ -1514,7 +1548,8 @@
     "style": "elegant",
     "season": "summer",
     "image_path": "/photos/top_verde_satin_kimono.jpg",
-    "analysis_status": "completed"
+    "analysis_status": "completed",
+    "cutout_path": "/photos/cutouts_completos/top_verde_satin_kimono.webp"
   },
   {
     "id": "up-vestido_camisero_rayas_azul",
@@ -1526,7 +1561,8 @@
     "style": "casual",
     "season": "summer",
     "image_path": "/photos/vestido_camisero_rayas_azul.jpg",
-    "analysis_status": "completed"
+    "analysis_status": "completed",
+    "cutout_path": "/photos/cutouts_completos/vestido_camisero_rayas_azul.webp"
   },
   {
     "id": "up-top_negro_asimetrico",
@@ -1538,7 +1574,8 @@
     "style": "elegant",
     "season": "all",
     "image_path": "/photos/top_negro_asimetrico.jpg",
-    "analysis_status": "completed"
+    "analysis_status": "completed",
+    "cutout_path": "/photos/cutouts_completos/top_negro_asimetrico.webp"
   },
   {
     "id": "up-blusa_blanca_jardin",
@@ -1550,7 +1587,8 @@
     "style": "casual",
     "season": "summer",
     "image_path": "/photos/blusa_blanca_jardin.jpg",
-    "analysis_status": "completed"
+    "analysis_status": "completed",
+    "cutout_path": "/photos/cutouts_completos/blusa_blanca_jardin.webp"
   },
   {
     "id": "up-blusa_flores_pantalon_rosa",
@@ -1562,6 +1600,7 @@
     "style": "casual",
     "season": "summer",
     "image_path": "/photos/blusa_flores_pantalon_rosa.jpg",
-    "analysis_status": "completed"
+    "analysis_status": "completed",
+    "cutout_path": "/photos/cutouts_completos/blusa_flores_pantalon_rosa.webp"
   }
 ]
