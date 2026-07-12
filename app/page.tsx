@@ -3,6 +3,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import GarmentCard from '@/components/GarmentCard';
 import GarmentModal from '@/components/GarmentModal';
+import PhotoUpload from '@/components/PhotoUpload';
 import {
   Garment,
   fetchGarments,
@@ -23,6 +24,7 @@ export default function ClosetPage() {
   const [category, setCategory] = useState<string | null>(null);
   const [season, setSeason] = useState<string | null>(null);
   const [selected, setSelected] = useState<Garment | null>(null);
+  const [showUpload, setShowUpload] = useState(false);
 
   useEffect(() => {
     setFavs(getFavs());
@@ -51,11 +53,16 @@ export default function ClosetPage() {
 
   return (
     <>
-      <div className="page-head">
-        <h1>
-          Tu clóset, <em>curado</em>.
-        </h1>
-        <p>Cada prenda de tu armario, lista para combinarse.</p>
+      <div className="page-head" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: '1rem', flexWrap: 'wrap' }}>
+        <div>
+          <h1>
+            Tu clóset, <em>curado</em>.
+          </h1>
+          <p>Cada prenda de tu armario, lista para combinarse.</p>
+        </div>
+        <button className="btn btn--primary" onClick={() => setShowUpload(true)}>
+          + Agregar prenda
+        </button>
       </div>
 
       <div className="chip-row">
@@ -126,6 +133,25 @@ export default function ClosetPage() {
           onToggleFav={handleFav}
           onClose={() => setSelected(null)}
         />
+      )}
+
+      {showUpload && (
+        <div className="modal-veil" onClick={() => setShowUpload(false)}>
+          <div className="modal-card" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-card__body">
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                <h2>Agregar prenda</h2>
+                <button className="x-btn" style={{ position: 'static' }} onClick={() => setShowUpload(false)} aria-label="Cerrar">✕</button>
+              </div>
+              <PhotoUpload
+                onUploadComplete={(g) => {
+                  setGarments((prev) => [g, ...prev]);
+                  setShowUpload(false);
+                }}
+              />
+            </div>
+          </div>
+        </div>
       )}
     </>
   );

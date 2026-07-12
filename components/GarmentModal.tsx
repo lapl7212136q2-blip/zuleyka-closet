@@ -10,6 +10,7 @@ import {
   SEASON_LABELS,
   STYLE_LABELS,
 } from '@/lib/closet';
+import Rotation360 from './Rotation360';
 
 interface Props {
   garment: Garment;
@@ -18,11 +19,13 @@ interface Props {
   onClose: () => void;
 }
 
+type ViewMode = 'cutout' | 'photo' | '360';
+
 export default function GarmentModal({ garment, favorited, onToggleFav, onClose }: Props) {
-  const [showPhoto, setShowPhoto] = useState(false);
   const cutout = garment.cutout_path;
   const photo = garment.image_path || garment.photo_url;
-  const img = showPhoto ? photo : cutout || photo;
+  const [mode, setMode] = useState<ViewMode>(cutout ? 'cutout' : 'photo');
+  const img = mode === 'photo' ? photo : cutout || photo;
 
   const specs: Array<[string, React.ReactNode]> = [
     ['Categoría', CATEGORY_LABELS[garment.category] || garment.category],
@@ -42,13 +45,27 @@ export default function GarmentModal({ garment, favorited, onToggleFav, onClose 
     <div className="modal-veil" onClick={onClose}>
       <div className="modal-card" onClick={(e) => e.stopPropagation()}>
         <div className="modal-card__stage">
-          {img && <img src={img} alt={garmentName(garment)} />}
-          <button className="x-btn" onClick={onClose} aria-label="Cerrar">✕</button>
-          {cutout && photo && (
-            <button className="photo-toggle" onClick={() => setShowPhoto(!showPhoto)}>
-              {showPhoto ? 'Ver recorte' : 'Ver foto original'}
-            </button>
+          {mode === '360' ? (
+            <Rotation360 angles={garment.angles} fallbackImage={cutout || photo} alt={garmentName(garment)} />
+          ) : (
+            img && <img src={img} alt={garmentName(garment)} />
           )}
+          <button className="x-btn" onClick={onClose} aria-label="Cerrar">✕</button>
+          <div className="view-toggle">
+            {cutout && photo && (
+              <button className={mode === 'cutout' ? 'active' : ''} onClick={() => setMode('cutout')}>
+                Recorte
+              </button>
+            )}
+            {cutout && photo && (
+              <button className={mode === 'photo' ? 'active' : ''} onClick={() => setMode('photo')}>
+                Foto
+              </button>
+            )}
+            <button className={mode === '360' ? 'active' : ''} onClick={() => setMode('360')}>
+              360°
+            </button>
+          </div>
         </div>
         <div className="modal-card__body">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '1rem' }}>

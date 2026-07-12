@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import catalog from '@/data/garments-catalog.json';
+import { promises as fs } from 'fs';
+import path from 'path';
+
+const CATALOG_PATH = path.join(process.cwd(), 'data', 'garments-catalog.json');
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -29,7 +32,8 @@ export async function GET(request: NextRequest) {
     const season = searchParams.get('season')?.toLowerCase();
 
     // Local catalog is the source of truth; Supabase adds user uploads
-    let garments: any[] = [...(catalog as any[])];
+    const raw = await fs.readFile(CATALOG_PATH, 'utf8');
+    let garments: any[] = JSON.parse(raw);
 
     if (supabase) {
       try {

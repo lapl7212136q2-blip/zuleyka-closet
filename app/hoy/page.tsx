@@ -18,6 +18,7 @@ interface Weather {
   tmin: number;
   rain: number; // prob. máxima del día (%)
   fallback: boolean;
+  city?: string;
 }
 
 const WMO: Record<number, string> = {
@@ -87,8 +88,11 @@ function buildLook(garments: Garment[], w: Weather | null, seed: number): Garmen
     return true;
   };
 
+  const everyday = (g: Garment) => g.style !== 'elegant' && g.style !== 'formal';
+
   const pool = garments.filter(bySeason);
   const from = (cat: string, s: number) =>
+    pick(pool.filter((g) => g.category === cat && everyday(g)), s) ||
     pick(pool.filter((g) => g.category === cat), s) ||
     pick(garments.filter((g) => g.category === cat), s);
 
@@ -132,7 +136,7 @@ export default function HoyPage() {
   useEffect(() => {
     fetchGarments().then(setGarments).catch(() => {});
 
-    const load = (lat: number, lon: number, fallback: boolean) => {
+    const load = (lat: number, lon: number, fallback: boolean, city?: string) => {
       fetch(
         `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}` +
           `&current=temperature_2m,apparent_temperature,weather_code` +
@@ -148,19 +152,26 @@ export default function HoyPage() {
             tmin: Math.round(d.daily.temperature_2m_min[0]),
             rain: d.daily.precipitation_probability_max?.[0] ?? 0,
             fallback,
+            city,
           })
         )
         .catch(() => setWeatherErr(true));
     };
 
+    const loadByIp = () =>
+      fetch('https://ipapi.co/json/')
+        .then((r) => r.json())
+        .then((d) => load(d.latitude, d.longitude, true, d.city))
+        .catch(() => load(19.43, -99.13, true, 'CDMX'));
+
     if (typeof navigator !== 'undefined' && navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (pos) => load(pos.coords.latitude, pos.coords.longitude, false),
-        () => load(19.43, -99.13, true),
+        loadByIp,
         { timeout: 6000 }
       );
     } else {
-      load(19.43, -99.13, true);
+      loadByIp();
     }
   }, []);
 
@@ -214,7 +225,7 @@ export default function HoyPage() {
             <strong>{WMO[weather.code] || 'Clima'}</strong>
             Máx {weather.tmax}° · Mín {weather.tmin}°
             {weather.rain >= 40 && <> · {weather.rain}% lluvia</>}
-            {weather.fallback && <> · CDMX</>}
+            {weather.fallback && weather.city && <> · {weather.city}</>}
           </div>
         </div>
       ) : weatherErr ? (

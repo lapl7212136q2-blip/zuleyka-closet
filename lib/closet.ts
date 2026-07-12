@@ -15,6 +15,8 @@ export interface Garment {
   image_path?: string;
   cutout_path?: string;
   photo_url?: string;
+  /** Fotos de la prenda en distintos ángulos (fondo blanco), en orden de giro. Aún no hay ninguna cargada. */
+  angles?: string[];
 }
 
 export const CATEGORY_LABELS: Record<string, string> = {
