@@ -80,9 +80,7 @@ export default function ClosetPage() {
     <>
       <div className="page-head" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: '1rem', flexWrap: 'wrap' }}>
         <div>
-          <h1>
-            Tu clóset, <em>curado</em>.
-          </h1>
+          <h1>Tu clóset.</h1>
           <p>Cada prenda de tu armario, lista para combinarse.</p>
         </div>
         <button className="btn btn--primary" onClick={() => setShowUpload(true)}>
