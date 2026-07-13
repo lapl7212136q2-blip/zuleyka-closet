@@ -315,13 +315,17 @@ body {
   background: radial-gradient(ellipse at center, rgba(63, 46, 30, 0.22), transparent 70%);
 }
 
+/* Posicionamiento absoluto: en Safari (iPhone) max-height % no se resuelve
+   dentro de un contenedor con altura derivada de aspect-ratio y la foto se corta */
 .g-card__stage img {
-  position: relative;
+  position: absolute;
   z-index: 1;
-  max-width: 82%;
-  max-height: 88%;
+  bottom: 6%;
+  left: 9%;
+  width: 82%;
+  height: 88%;
   object-fit: contain;
-  margin-bottom: 6%;
+  object-position: center bottom;
   filter: drop-shadow(0 6px 8px rgba(63, 46, 30, 0.12));
   transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.3, 1);
 }
@@ -1007,11 +1011,12 @@ body {
 }
 
 .cal-day img {
-  max-height: 70%;
-  max-width: 85%;
+  position: absolute;
+  bottom: 5%;
+  left: 7.5%;
+  width: 85%;
+  height: 70%;
   object-fit: contain;
-  margin-top: auto;
-  margin-bottom: auto;
 }
 
 /* ---------- Looks ---------- */
