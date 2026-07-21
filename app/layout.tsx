@@ -17,8 +17,24 @@ const karla = Karla({
 });
 
 export const metadata: Metadata = {
-  title: 'Zuleyka — Clóset personal',
+  title: "Zuleyka's Closet",
   description: 'Tu armario digital: prendas, looks y sugerencias según el clima',
+  applicationName: "Zuleyka's Closet",
+  manifest: '/manifest.webmanifest',
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: '48x48' },
+      { url: '/favicon-32.png', type: 'image/png', sizes: '32x32' },
+      { url: '/icon-192.png', type: 'image/png', sizes: '192x192' },
+      { url: '/icon-512.png', type: 'image/png', sizes: '512x512' },
+    ],
+    apple: [{ url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' }],
+  },
+  appleWebApp: {
+    capable: true,
+    title: "Zuleyka's Closet",
+    statusBarStyle: 'default',
+  },
 };
 
 export const viewport: Viewport = {

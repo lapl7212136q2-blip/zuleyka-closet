@@ -67,8 +67,8 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       <header className="app-header">
         <div className="app-header__inner">
           <Link href="/" className="brand">
-            Zuleyka
-            <small>clóset personal</small>
+            Zuleyka&rsquo;s
+            <small>closet</small>
           </Link>
           <nav className="top-nav">
             {NAV.map((item) => (
