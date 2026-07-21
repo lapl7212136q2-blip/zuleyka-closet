@@ -14,6 +14,7 @@ import {
   unhideGarment,
   garmentImage,
   garmentName,
+  captureUploadToken,
   CATEGORY_PLURAL,
   SEASON_LABELS,
 } from '@/lib/closet';
@@ -34,6 +35,7 @@ export default function ClosetPage() {
   const [showUpload, setShowUpload] = useState(false);
 
   useEffect(() => {
+    captureUploadToken();
     setFavs(getFavs());
     setHidden(getHidden());
     fetchGarments(true)

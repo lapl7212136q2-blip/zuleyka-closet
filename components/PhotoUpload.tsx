@@ -1,7 +1,14 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { Garment, CATEGORY_LABELS, COLOR_LABELS, STYLE_LABELS, SEASON_LABELS } from '@/lib/closet';
+import {
+  Garment,
+  getUploadToken,
+  CATEGORY_LABELS,
+  COLOR_LABELS,
+  STYLE_LABELS,
+  SEASON_LABELS,
+} from '@/lib/closet';
 
 interface PhotoUploadProps {
   onUploadComplete?: (garment: Garment) => void;
@@ -116,12 +123,6 @@ export default function PhotoUpload({ onUploadComplete }: PhotoUploadProps) {
   const [error, setError] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const previewsRef = useRef<string[]>([]);
-
-  // El token llega una vez por URL (?t=...) y queda guardado en el telefono.
-  useEffect(() => {
-    const t = new URLSearchParams(window.location.search).get('t');
-    if (t) localStorage.setItem('uploadToken', t);
-  }, []);
 
   const applyFiles = (picked: File[]) => {
     previewsRef.current.forEach(URL.revokeObjectURL);
@@ -249,7 +250,7 @@ export default function PhotoUpload({ onUploadComplete }: PhotoUploadProps) {
       formData.append('style', style);
       formData.append('season', season);
 
-      const token = localStorage.getItem('uploadToken');
+      const token = getUploadToken();
       const res = await fetch('/api/upload', {
         method: 'POST',
         body: formData,

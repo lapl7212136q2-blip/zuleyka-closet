@@ -143,6 +143,22 @@ export function unhideGarment(id: string): Set<string> {
   return hidden;
 }
 
+// ---------- token de subida (localStorage) ----------
+
+const TOKEN_KEY = 'uploadToken';
+
+/** El token llega una vez por URL (?t=...) y queda guardado en el telefono. */
+export function captureUploadToken(): void {
+  if (typeof window === 'undefined') return;
+  const t = new URLSearchParams(window.location.search).get('t');
+  if (t) localStorage.setItem(TOKEN_KEY, t);
+}
+
+export function getUploadToken(): string | null {
+  if (typeof window === 'undefined') return null;
+  return localStorage.getItem(TOKEN_KEY);
+}
+
 // ---------- favoritas (localStorage) ----------
 
 const FAV_KEY = 'zk-favs';
