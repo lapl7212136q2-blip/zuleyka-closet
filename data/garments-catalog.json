@@ -1784,5 +1784,25 @@
     "image_path": "/photos/vestido_rojo_sirena_gala.jpg",
     "analysis_status": "completed",
     "cutout_path": "/photos/cutouts_completos/vestido_rojo_sirena_gala.webp"
+  },
+  {
+    "id": "dl-vestido_naranja_rayas",
+    "name": "Vestido naranja de rayas",
+    "category": "dress",
+    "primary_color": "orange",
+    "pattern": "print",
+    "style": "elegant",
+    "season": "summer",
+    "color": "orange",
+    "fit_type": "regular",
+    "image_path": "/photos/vestido_naranja_rayas_0.jpg",
+    "analysis_status": "completed",
+    "cutout_path": "/photos/cutouts/vestido_naranja_rayas_0.webp",
+    "angles": [
+      "/photos/cutouts/vestido_naranja_rayas_0.webp",
+      "/photos/cutouts/vestido_naranja_rayas_1.webp",
+      "/photos/cutouts/vestido_naranja_rayas_2.webp",
+      "/photos/cutouts/vestido_naranja_rayas_3.webp"
+    ]
   }
 ]
