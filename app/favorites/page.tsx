@@ -58,7 +58,10 @@ export default function FavoritesPage() {
 
       {selected && (
         <GarmentModal
+          key={selected.id}
           garment={selected}
+          siblings={favorites}
+          onNavigate={setSelected}
           favorited={favs.has(selected.id)}
           onToggleFav={handleFav}
           onClose={() => setSelected(null)}

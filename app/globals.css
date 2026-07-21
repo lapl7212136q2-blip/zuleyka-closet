@@ -550,6 +550,30 @@ body {
   transform: rotate(90deg);
 }
 
+.stage-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: rgba(255, 253, 248, 0.9);
+  color: var(--ink-soft);
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s;
+}
+
+.stage-nav:hover {
+  color: var(--ink);
+  background: var(--card);
+}
+
+.stage-nav--prev { left: 0.8rem; }
+.stage-nav--next { right: 0.8rem; }
+
 .photo-toggle {
   position: absolute;
   bottom: 0.8rem;
