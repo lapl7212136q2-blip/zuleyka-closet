@@ -9,7 +9,9 @@ const execFileAsync = promisify(execFile);
 const ROOT = process.cwd();
 const TMP_DIR = path.join(ROOT, '.tmp-uploads');
 const CATALOG_PATH = path.join(ROOT, 'data', 'garments-catalog.json');
-const PYTHON = path.join(ROOT, 'venv', 'Scripts', 'python.exe');
+const PYTHON = process.platform === 'win32'
+  ? path.join(ROOT, 'venv', 'Scripts', 'python.exe')
+  : path.join(ROOT, 'venv', 'bin', 'python');
 const SCRIPT = path.join(ROOT, 'scripts', 'import_photos.py');
 
 function slugify(name: string): string {
