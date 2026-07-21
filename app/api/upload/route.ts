@@ -25,11 +25,17 @@ function slugify(name: string): string {
 }
 
 export async function POST(request: NextRequest) {
-  let tempPath: string | null = null;
+  // Sin UPLOAD_TOKEN en el .env el endpoint queda abierto (uso local / LAN).
+  const expected = process.env.UPLOAD_TOKEN;
+  if (expected && request.headers.get('x-upload-token') !== expected) {
+    return NextResponse.json({ error: 'Token de subida inválido' }, { status: 401 });
+  }
+
+  const tempPaths: string[] = [];
   try {
     const formData = await request.formData();
-    const file = formData.get('file') as File | null;
-    if (!file) {
+    const files = formData.getAll('file').filter((f): f is File => f instanceof File);
+    if (files.length === 0) {
       return NextResponse.json({ error: 'Falta la foto' }, { status: 400 });
     }
 
@@ -39,19 +45,21 @@ export async function POST(request: NextRequest) {
     const color = (formData.get('color') as string) || '';
     const style = (formData.get('style') as string) || '';
     const season = (formData.get('season') as string) || '';
-    const focusX = (formData.get('focusX') as string) || '';
-    const focusY = (formData.get('focusY') as string) || '';
-
-    const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
-    const buffer = Buffer.from(await file.arrayBuffer());
+    // Una marca de foco por foto, en el mismo orden ('-' = sin marca).
+    const focusX = formData.getAll('focusX').map(String);
+    const focusY = formData.getAll('focusY').map(String);
 
     await fs.mkdir(TMP_DIR, { recursive: true });
-    tempPath = path.join(TMP_DIR, `${Date.now()}_${Math.random().toString(36).slice(2, 8)}.${ext}`);
-    await fs.writeFile(tempPath, buffer);
+    for (const file of files) {
+      const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
+      const dest = path.join(TMP_DIR, `${Date.now()}_${Math.random().toString(36).slice(2, 8)}.${ext}`);
+      await fs.writeFile(dest, Buffer.from(await file.arrayBuffer()));
+      tempPaths.push(dest);
+    }
 
     const raw = await fs.readFile(CATALOG_PATH, 'utf8');
     const existingIds = new Set(JSON.parse(raw).map((g: any) => g.id));
-    const base = slugify(name || file.name.split('.')[0]);
+    const base = slugify(name || files[0].name.split('.')[0]);
     let slug = base;
     let n = 2;
     while (existingIds.has(`dl-${slug}`)) {
@@ -59,18 +67,21 @@ export async function POST(request: NextRequest) {
       n += 1;
     }
 
-    const scriptArgs = [SCRIPT, tempPath, '--slug', slug];
+    const scriptArgs = [SCRIPT, ...tempPaths, '--slug', slug];
     if (name) scriptArgs.push('--name', name);
     if (category) scriptArgs.push('--category', category);
     if (color) scriptArgs.push('--color', color);
     if (style) scriptArgs.push('--style', style);
     if (season) scriptArgs.push('--season', season);
-    if (focusX && focusY) scriptArgs.push('--focus', `${focusX},${focusY}`);
+    files.forEach((_, i) => {
+      const hasFocus = focusX[i] && focusY[i] && focusX[i] !== '-';
+      scriptArgs.push('--focus', hasFocus ? `${focusX[i]},${focusY[i]}` : '-');
+    });
 
     const { stdout } = await execFileAsync(
       PYTHON,
       scriptArgs,
-      { cwd: ROOT, timeout: 120000 }
+      { cwd: ROOT, timeout: 120000 * files.length }
     );
 
     const garment = JSON.parse(stdout.trim());
@@ -79,8 +90,6 @@ export async function POST(request: NextRequest) {
     const message = error.stderr?.toString().trim() || error.message || 'Error desconocido';
     return NextResponse.json({ error: message }, { status: 500 });
   } finally {
-    if (tempPath) {
-      fs.unlink(tempPath).catch(() => {});
-    }
+    tempPaths.forEach((p) => fs.unlink(p).catch(() => {}));
   }
 }

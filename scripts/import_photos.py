@@ -6,6 +6,10 @@ Uso (una foto, con metadata):
       --category top --color blue [--pattern solid --style casual --season summer] \
       [--crop l,t,r,b]
 
+Uso (varias fotos = una sola prenda giratoria 360, en orden de giro):
+  python scripts/import_photos.py frente.jpg lado.jpg espalda.jpg --slug vestido_x \
+      [--focus 0.5,0.45 --focus - --focus 0.47,0.4]
+
 Uso (carpeta inbox/, metadata por defecto — editar el catalogo despues):
   python scripts/import_photos.py --inbox
 """
@@ -143,20 +147,25 @@ def process(src, slug, crop=None, focus=None, session=None):
     return guess_attributes(canvas)
 
 
-def add_entry(slug, name, category, color, pattern, style, season):
+def add_entry(slug, name, category, color, pattern, style, season, angles=None):
+    """angles: slugs de los frames en orden de giro (prenda 360). El primero
+    hace de portada; sin angles la prenda es una sola foto."""
     with open(CATALOG, encoding="utf-8") as f:
         catalog = json.load(f)
     gid = "dl-" + slug
     if any(g["id"] == gid for g in catalog):
         raise RuntimeError(f"ya existe una prenda con id {gid}")
+    cover = angles[0] if angles else slug
     entry = {
         "id": gid, "name": name, "category": category,
         "primary_color": color, "pattern": pattern, "style": style,
         "season": season, "color": color, "fit_type": "regular",
-        "image_path": f"/photos/{slug}.jpg",
+        "image_path": f"/photos/{cover}.jpg",
         "analysis_status": "completed",
-        "cutout_path": f"/photos/cutouts/{slug}.webp",
+        "cutout_path": f"/photos/cutouts/{cover}.webp",
     }
+    if angles:
+        entry["angles"] = [f"/photos/cutouts/{a}.webp" for a in angles]
     catalog.append(entry)
     with open(CATALOG, "w", encoding="utf-8") as f:
         json.dump(catalog, f, ensure_ascii=False, indent=2)
@@ -165,7 +174,7 @@ def add_entry(slug, name, category, color, pattern, style, season):
 
 def main():
     p = argparse.ArgumentParser()
-    p.add_argument("photo", nargs="?", help="ruta de la foto")
+    p.add_argument("photo", nargs="*", help="ruta(s) de la(s) foto(s); varias = prenda 360")
     p.add_argument("--inbox", action="store_true", help="procesar todo inbox/")
     p.add_argument("--slug")
     p.add_argument("--name")
@@ -177,13 +186,16 @@ def main():
     p.add_argument("--style", default=None, help="si se omite, se usa 'casual'")
     p.add_argument("--season", default=None, help="si se omite, se usa 'all'")
     p.add_argument("--crop", help="fracciones l,t,r,b (ej. 0.3,0.1,0.7,1.0)")
-    p.add_argument("--focus", help="fracciones fx,fy sobre un punto de la persona a conservar "
-                                    "cuando se superpone con otra (ej. 0.8,0.5)")
+    p.add_argument("--focus", action="append", default=[],
+                   help="fracciones fx,fy sobre un punto de la persona a conservar "
+                        "cuando se superpone con otra (ej. 0.8,0.5). Repetible: uno "
+                        "por foto, '-' para la que no lleva marca")
     args = p.parse_args()
 
     os.makedirs(CUTOUTS, exist_ok=True)
     crop = tuple(float(x) for x in args.crop.split(",")) if args.crop else None
-    focus = tuple(float(x) for x in args.focus.split(",")) if args.focus else None
+    focuses = [tuple(float(x) for x in f.split(",")) if f and f != "-" else None
+               for f in args.focus]
     session = new_session("isnet-general-use")
 
     if args.inbox:
@@ -211,13 +223,22 @@ def main():
 
     if not args.photo:
         p.error("da una foto o usa --inbox")
-    slug = args.slug or slugify(args.name or os.path.splitext(os.path.basename(args.photo))[0])
-    guess = process(args.photo, slug, crop=crop, focus=focus, session=session)
+    slug = args.slug or slugify(args.name or os.path.splitext(os.path.basename(args.photo[0]))[0])
+
+    # Varias fotos = una sola prenda con angles[] (frames en orden de giro).
+    # El nombre/atributos salen del primer frame, que es tambien la portada.
+    angles = [f"{slug}_{i}" for i in range(len(args.photo))] if len(args.photo) > 1 else None
+    guess = None
+    for i, photo in enumerate(args.photo):
+        g = process(photo, angles[i] if angles else slug, crop=crop,
+                    focus=focuses[i] if i < len(focuses) else None, session=session)
+        guess = guess or g
+
     name = args.name or guess["name"]
     entry = add_entry(slug, name,
                       args.category or guess["category"], args.color or guess["color"],
                       args.pattern or guess["pattern"], args.style or guess["style"],
-                      args.season or guess["season"])
+                      args.season or guess["season"], angles=angles)
     print(json.dumps(entry, ensure_ascii=False))
 
 

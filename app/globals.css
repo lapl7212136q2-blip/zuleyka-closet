@@ -762,6 +762,75 @@ body {
   font-size: 2rem;
 }
 
+.upload-drop__hint {
+  font-size: 0.75rem;
+  font-weight: 500;
+  opacity: 0.7;
+}
+
+.upload-thumbs {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding-bottom: 0.25rem;
+}
+
+.upload-thumb {
+  position: relative;
+  flex: 0 0 72px;
+}
+
+.upload-thumb img {
+  width: 72px;
+  height: 96px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  display: block;
+}
+
+.upload-thumb.is-active img {
+  border-color: var(--accent);
+}
+
+.upload-thumb__n {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.upload-thumb__move {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.15rem;
+}
+
+.upload-thumb__move button {
+  background: none;
+  border: none;
+  padding: 0.15rem 0.4rem;
+  color: var(--accent);
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.upload-thumb__move button:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
 .upload-focus-hint {
   font-size: 0.8rem;
   font-weight: 500;
